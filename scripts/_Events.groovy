@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Griffon Jzy3d - Andres Almiray. All Rights Reserved.
+ * Copyright (c) 2010-2012 Griffon Jzy3d - Andres Almiray. All Rights Reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,25 +31,6 @@
 /**
  * @author Andres Almiray
  */
-
-def eventClosure1 = binding.variables.containsKey('eventSetClasspath') ? eventSetClasspath : {cl->}
-eventSetClasspath = { cl ->
-    eventClosure1(cl)
-    if(compilingPlugin('jzy3d')) return
-    griffonSettings.dependencyManager.flatDirResolver name: 'griffon-jzy3d-plugin', dirs: "${jzy3dPluginDir}/addon"
-    griffonSettings.dependencyManager.addPluginDependency('jzy3d', [
-        conf: 'compile',
-        name: 'griffon-jzy3d-addon',
-        group: 'org.codehaus.griffon.plugins',
-        version: jzy3dPluginVersion
-    ])
-    griffonSettings.dependencyManager.addPluginDependency('jzy3d', [
-        conf: 'build',
-        name: 'griffon-jzy3d-cli',
-        group: 'org.codehaus.griffon.plugins',
-        version: jzy3dPluginVersion
-    ])
-}
 
 eventCollectArtifacts = { artifactsInfo ->
     if(!artifactsInfo.find{ it.type == 'chart3d' }) {

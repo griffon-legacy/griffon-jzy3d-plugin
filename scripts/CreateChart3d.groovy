@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Griffon Jzy3d - Andres Almiray. All Rights Reserved.
+ * Copyright (c) 2010-2012 Griffon Jzy3d - Andres Almiray. All Rights Reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,12 +32,9 @@
  * @author Andres Almiray
  */
 
-includeTargets << griffonScript("_GriffonInit")
 includeTargets << griffonScript("_GriffonCreateArtifacts")
 
 target(createChart3D: "Creates a new Chart3D script") {
-    depends(checkVersion, parseArguments)
-
     promptForName(type: "Chart3D")
 
     def name = argsMap["params"][0]

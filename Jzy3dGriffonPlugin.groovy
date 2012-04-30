@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Griffon Jzy3d - Andres Almiray. All Rights Reserved.
+ * Copyright (c) 2010-2012 Griffon Jzy3d - Andres Almiray. All Rights Reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,30 +33,76 @@
  */
 class Jzy3dGriffonPlugin {
     // the plugin version
-    def version = "0.2"
+    String version = '0.3'
     // the version or versions of Griffon the plugin is designed for
-    def griffonVersion = '0.9.4 > *' 
+    String griffonVersion = '0.9.5 > *'
     // the other plugins this plugin depends on
-    def dependsOn = ['jogl-compat': 0.1]
+    Map dependsOn = ['jogl': '0.5']
     // resources that are included in plugin packaging
-    def pluginIncludes = []
+    List pluginIncludes = []
     // the plugin license
-    def license = 'BSD'
+    String license = 'BSD'
     // Toolkit compatibility. No value means compatible with all
     // Valid values are: swing, javafx, swt, pivot, gtk
-    def toolkits = ['swing']
+    List toolkits = ['swing']
     // Platform compatibility. No value means compatible with all
     // Valid values are:
     // linux, linux64, windows, windows64, macosx, macosx64, solaris
-    def platforms = []
+    List platforms = ['linux', 'macosx', 'windows']
+    // URL where documentation can be found
+    String documentation = ''
+    // URL where source can be found
+    String source = 'https://github.com/griffon/griffon-jzy3d-plugin'
 
-    def author = 'Andres Almiray'
-    def authorEmail = 'aalmiray@users.sourceforge.net'
-    def title = '3D chart support via Jzy3d'
-    def description = '''
-3D chart support via Jzy3d
+    List authors = [
+        [
+            name: 'Andres Almiray',
+            email: 'aalmiray@yahoo.com'
+        ]
+    ]
+    String title = "3D charts and plots"
+    String description = '''
+Provides integration with [Jzy3d][1], a java library for scientific 3D plotting.
+
+Usage
+-----
+
+This plugin does not add new nodes to builders, however it adds a new Artifact: `Chart3D`. This artifact may belong
+to an MVC group, thus sharing the same context variables as the group, or it can stand on its own. Once you have created
+a Chart3D class you can configure it on a group as follows:
+
+__griffon-app/conf/Application.groovy__
+
+		mvcGroups {
+			// MVC Group for "sample"
+			'sample' {
+				model      = 'sample.SampleModel'
+				chart3d    = 'sample.SampleChart3D'
+				view       = 'sample.SampleView'
+				controller = 'sample.SampleController'
+			}
+		}
+
+It is a good idea to place the `chart3d` member before the View, this way the chart can be referenced from the View and
+be displayed correctly, which can be done in this way:
+
+		package sample
+
+		application(title: 'Sample',
+				size: [600,600],
+				locationByPlatform:true,
+				iconImage: imageIcon('/griffon-icon-48x48.png').image,
+				iconImages: [imageIcon('/griffon-icon-48x48.png').image,
+				imageIcon('/griffon-icon-32x32.png').image,
+				imageIcon('/griffon-icon-16x16.png').image]) {
+			widget(chart3d.chart.canvas)
+		}
+
+### Scripts
+
+ * __create-chart3d__ - creates a new Chart3D class that can participate in an MVC group if configured accordingly
+
+
+[1]: http://code.google.com/p/jzy3d/
 '''
-
-    // URL to the plugin's documentation
-    def documentation = 'http://griffon.codehaus.org/Jzy3d+Plugin'
 }
