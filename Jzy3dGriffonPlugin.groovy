@@ -33,11 +33,11 @@
  */
 class Jzy3dGriffonPlugin {
     // the plugin version
-    String version = '0.3'
+    String version = '1.0.0'
     // the version or versions of Griffon the plugin is designed for
-    String griffonVersion = '0.9.5 > *'
+    String griffonVersion = '1.0.0 > *'
     // the other plugins this plugin depends on
-    Map dependsOn = ['jogl': '0.5']
+    Map dependsOn = [jogl: '1.0.0']
     // resources that are included in plugin packaging
     List pluginIncludes = []
     // the plugin license
@@ -73,30 +73,30 @@ a Chart3D class you can configure it on a group as follows:
 
 __griffon-app/conf/Application.groovy__
 
-		mvcGroups {
-			// MVC Group for "sample"
-			'sample' {
-				model      = 'sample.SampleModel'
-				chart3d    = 'sample.SampleChart3D'
-				view       = 'sample.SampleView'
-				controller = 'sample.SampleController'
-			}
-		}
+        mvcGroups {
+            // MVC Group for "sample"
+            'sample' {
+                model      = 'sample.SampleModel'
+                chart3d    = 'sample.SampleChart3D'
+                view       = 'sample.SampleView'
+                controller = 'sample.SampleController'
+            }
+        }
 
 It is a good idea to place the `chart3d` member before the View, this way the chart can be referenced from the View and
 be displayed correctly, which can be done in this way:
 
-		package sample
+        package sample
 
-		application(title: 'Sample',
-				size: [600,600],
-				locationByPlatform:true,
-				iconImage: imageIcon('/griffon-icon-48x48.png').image,
-				iconImages: [imageIcon('/griffon-icon-48x48.png').image,
-				imageIcon('/griffon-icon-32x32.png').image,
-				imageIcon('/griffon-icon-16x16.png').image]) {
-			widget(chart3d.chart.canvas)
-		}
+        application(title: 'Sample',
+                size: [600,600],
+                locationByPlatform:true,
+                iconImage: imageIcon('/griffon-icon-48x48.png').image,
+                iconImages: [imageIcon('/griffon-icon-48x48.png').image,
+                imageIcon('/griffon-icon-32x32.png').image,
+                imageIcon('/griffon-icon-16x16.png').image]) {
+            widget(chart3d.chart.canvas)
+        }
 
 ### Scripts
 

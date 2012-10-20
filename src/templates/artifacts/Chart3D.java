@@ -29,7 +29,7 @@ public class @artifact.name@ extends AbstractGriffonChart3D {
         // Define range and precision for the function to plot
         Range range = new Range(-.5, .5);
         int steps   = 50;
-        
+
         // Create the object to represent the function over the given range.
         final Shape surface = (Shape)Builder.buildOrthonormal(new OrthonormalGrid(range, steps, range, steps), mapper);
         surface.setColorMapper(new ColorMapper(new ColorMapRainbow(), surface.getBounds().getZmin(), surface.getBounds().getZmax()));

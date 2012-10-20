@@ -27,7 +27,7 @@ class @artifact.name@ {
         // Define range and precision for the function to plot
         Range range = new Range(-0.5, 0.5)
         int steps = 50
-        
+
         // Create the object to represent the function over the given range.
         final Shape surface = Builder.buildOrthonormal(new OrthonormalGrid(range, steps, range, steps), mapper)
         surface.colorMapper = new ColorMapper(new ColorMapRainbow(), surface.bounds.zmin, surface.bounds.zmax)
