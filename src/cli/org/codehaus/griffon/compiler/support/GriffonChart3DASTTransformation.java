@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Griffon Jzy3d - Andres Almiray. All Rights Reserved.
+ * Copyright (c) 2010-2013 Griffon Jzy3d - Andres Almiray. All Rights Reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,17 +32,12 @@ package org.codehaus.griffon.compiler.support;
 
 import griffon.plugins.jzy3d.GriffonChart3D;
 import griffon.plugins.jzy3d.GriffonChart3DClass;
-import org.codehaus.griffon.ast.GriffonASTUtils;
 import org.codehaus.griffon.compiler.GriffonCompilerContext;
-import org.codehaus.griffon.compiler.SourceUnitCollector;
 import org.codehaus.griffon.runtime.jzy3d.AbstractGriffonChart3D;
-import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Handles generation of code for 3D charts.<p/>
@@ -51,48 +46,34 @@ import org.slf4j.LoggerFactory;
  */
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class GriffonChart3DASTTransformation extends GriffonArtifactASTTransformation {
-    private static final Logger LOG = LoggerFactory.getLogger(GriffonChart3DASTTransformation.class);
     private static final String ARTIFACT_PATH = "charts";
-    private static final ClassNode GRIFFON_CHART3D_CLASS = ClassHelper.makeWithoutCaching(GriffonChart3D.class);
-    private static final ClassNode ABSTRACT_GRIFFON_CHART3D_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonChart3D.class);
+    private static final ClassNode GRIFFON_CHART3D_CLASS = makeClassSafe(GriffonChart3D.class);
+    private static final ClassNode ABSTRACT_GRIFFON_CHART3D_CLASS = makeClassSafe(AbstractGriffonChart3D.class);
 
     public static boolean isChart3DArtifact(ClassNode classNode, SourceUnit source) {
         if (classNode == null || source == null) return false;
         return ARTIFACT_PATH.equals(GriffonCompilerContext.getArtifactPath(source)) && classNode.getName().endsWith(GriffonChart3DClass.TRAILING);
     }
 
-    protected void transform(ClassNode classNode, SourceUnit source, String artifactPath) {
-        if (!isChart3DArtifact(classNode, source)) return;
-        doTransform(classNode);
+    protected String getArtifactType() {
+        return GriffonChart3DClass.TYPE;
     }
 
-    private void doTransform(ClassNode classNode) {
-        ClassNode superClass = classNode.getSuperClass();
-        if (ClassHelper.OBJECT_TYPE.equals(superClass)) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Setting " + ABSTRACT_GRIFFON_CHART3D_CLASS.getName() + " as the superclass of " + classNode.getName());
-            }
-            classNode.setSuperClass(ABSTRACT_GRIFFON_CHART3D_CLASS);
-        } else if (!classNode.implementsInterface(GRIFFON_CHART3D_CLASS)) {
-            inject(classNode, superClass);
-        }
+    protected ClassNode getSuperClassNode(ClassNode classNode) {
+        return ABSTRACT_GRIFFON_CHART3D_CLASS;
     }
 
-    private void inject(ClassNode classNode, ClassNode superClass) {
-        SourceUnit superSource = SourceUnitCollector.getInstance().getSourceUnit(superClass);
-        if (isChart3DArtifact(superClass, superSource)) return;
+    protected ClassNode getInterfaceNode() {
+        return GRIFFON_CHART3D_CLASS;
+    }
 
-        if (superSource == null) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Injecting " + GRIFFON_CHART3D_CLASS.getName() + " behavior to " + classNode.getName());
-            }
-            // 1. add interface
-            classNode.addInterface(GRIFFON_CHART3D_CLASS);
-            // 2. add methods
-            ASTInjector injector = new GriffonChart3DASTInjector();
-            injector.inject(classNode, GriffonChart3DClass.TYPE);
-        } else {
-            doTransform(superClass);
-        }
+    protected boolean matches(ClassNode classNode, SourceUnit source) {
+        return isChart3DArtifact(classNode, source);
+    }
+
+    protected ASTInjector[] getASTInjectors() {
+        return new ASTInjector[]{
+            new GriffonChart3DASTInjector()
+        };
     }
 }
